@@ -8,6 +8,7 @@ public class Checklist {
     private Long id;
     private String nome;
     private List<PerguntaChecklist> perguntas;
+    private Auditoria auditoria;
 
     public Checklist() {
         this.perguntas = new ArrayList<>();
@@ -45,5 +46,13 @@ public class Checklist {
 
     public void setPerguntas(List<PerguntaChecklist> perguntas) {
         this.perguntas = perguntas;
+    }
+
+    public Auditoria getAuditoria() {
+        return auditoria;
+    }
+
+    public void setAuditoria(Auditoria auditoria) {
+        this.auditoria = auditoria;
     }
 }

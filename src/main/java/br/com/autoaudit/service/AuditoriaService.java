@@ -2,13 +2,63 @@ package br.com.autoaudit.service;
 
 import br.com.autoaudit.dao.AuditoriaDAO;
 import br.com.autoaudit.model.Auditoria;
+import br.com.autoaudit.model.PerguntaChecklist;
+import br.com.autoaudit.model.RespostaChecklist;
 
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class AuditoriaService {
 
     private final AuditoriaDAO auditoriaDAO = new AuditoriaDAO();
+
+    // Calcula a aderência atual de uma auditoria.
+    public double calcularAderencia(Long auditoriaId) {
+
+        Auditoria auditoria =
+                auditoriaDAO.buscarPorId(auditoriaId);
+
+        if (auditoria == null) {
+            throw new IllegalArgumentException(
+                    "Auditoria não encontrada."
+            );
+        }
+
+        List<RespostaChecklist> respostas =
+                new ArrayList<>();
+
+        if (auditoria.getChecklist() != null) {
+
+            for (PerguntaChecklist pergunta :
+                    auditoria.getChecklist().getPerguntas()) {
+
+                RespostaChecklistService respostaService =
+                        new RespostaChecklistService();
+
+                List<RespostaChecklist> respostasPergunta =
+                        respostaService.listarPorPergunta(
+                                pergunta.getId()
+                        );
+
+                if (!respostasPergunta.isEmpty()) {
+
+                    // Utiliza a resposta mais recente da pergunta.
+                    respostas.add(
+                            respostasPergunta.get(
+                                    respostasPergunta.size() - 1
+                            )
+                    );
+                }
+            }
+        }
+
+        auditoria.calcularAderencia(respostas);
+
+        auditoriaDAO.atualizar(auditoria);
+
+        return auditoria.getPercentualAderencia();
+    }
 
     // Salva uma nova auditoria no banco.
     public void salvar(Auditoria auditoria) {
@@ -123,9 +173,12 @@ public class AuditoriaService {
                     "Auditoria não encontrada."
             );
         }
+        calcularAderencia(auditoriaId);
+
+        auditoria = auditoriaDAO.buscarPorId(auditoriaId);
 
         auditoria.finalizar();
-        atualizar(auditoria);
+        auditoriaDAO.atualizar(auditoria);
     }
 
     // Adiciona um responsável a uma auditoria.

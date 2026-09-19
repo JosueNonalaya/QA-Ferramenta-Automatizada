@@ -2,18 +2,25 @@ package br.com.autoaudit.model;
 
 import br.com.autoaudit.enums.OpcaoResposta;
 
+import java.time.LocalDateTime;
+
 public class RespostaChecklist {
 
     private Long id;
     private OpcaoResposta opcao;
     private PerguntaChecklist pergunta;
+    private LocalDateTime dataHoraResposta;
 
     public RespostaChecklist() {
     }
 
-    public RespostaChecklist(OpcaoResposta opcao, PerguntaChecklist pergunta) {
+    public RespostaChecklist(
+            OpcaoResposta opcao,
+            PerguntaChecklist pergunta
+    ) {
         this.opcao = opcao;
         this.pergunta = pergunta;
+        this.dataHoraResposta = LocalDateTime.now();
     }
 
     //GETTER's e SETTER's
@@ -39,5 +46,13 @@ public class RespostaChecklist {
 
     public void setPergunta(PerguntaChecklist pergunta) {
         this.pergunta = pergunta;
+    }
+
+    public LocalDateTime getDataHoraResposta() {
+        return dataHoraResposta;
+    }
+
+    public void setDataHoraResposta(LocalDateTime dataHoraResposta) {
+        this.dataHoraResposta = dataHoraResposta;
     }
 }

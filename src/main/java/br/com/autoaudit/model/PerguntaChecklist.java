@@ -5,6 +5,7 @@ public class PerguntaChecklist {
     private Long id;
     private String descricao;
     private int ordem;
+    private Checklist checklist;
 
     public PerguntaChecklist() {
     }
@@ -37,5 +38,13 @@ public class PerguntaChecklist {
 
     public void setOrdem(int ordem) {
         this.ordem = ordem;
+    }
+
+    public Checklist getChecklist() {
+        return checklist;
+    }
+
+    public void setChecklist(Checklist checklist) {
+        this.checklist = checklist;
     }
 }

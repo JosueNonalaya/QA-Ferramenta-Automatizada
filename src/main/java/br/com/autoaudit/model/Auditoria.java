@@ -1,6 +1,7 @@
 package br.com.autoaudit.model;
 
 import br.com.autoaudit.enums.StatusAuditoria;
+import br.com.autoaudit.model.RespostaChecklist;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -152,12 +153,53 @@ public class Auditoria {
     public void finalizar() {
         this.fim = LocalDateTime.now();
         this.status = StatusAuditoria.FINALIZADA;
-        calcularAderencia();
         gerarNaoConformidades();
     }
 
-    public void calcularAderencia() {
-        // Será implementado quando trabalharmos com as respostas do checklist.
+    // Calcula o percentual de aderência com base nas respostas do checklist.
+    public void calcularAderencia(
+            List<RespostaChecklist> respostas
+    ) {
+
+        if (checklist == null
+                || checklist.getPerguntas().isEmpty()) {
+
+            percentualAderencia = 0;
+            return;
+        }
+
+        int totalPerguntas =
+                checklist.getPerguntas().size();
+
+        int naoAplicaveis = 0;
+        int conformidades = 0;
+
+        for (RespostaChecklist resposta : respostas) {
+
+            if (resposta.getOpcao()
+                    == br.com.autoaudit.enums.OpcaoResposta.SIM) {
+
+                conformidades++;
+
+            } else if (resposta.getOpcao()
+                    == br.com.autoaudit.enums.OpcaoResposta.NAO_APLICAVEL) {
+
+                naoAplicaveis++;
+            }
+        }
+
+        int totalAplicavel =
+                totalPerguntas - naoAplicaveis;
+
+        // Evita divisão por zero quando todas as perguntas forem
+        // marcadas como NÃO_APLICÁVEL.
+        if (totalAplicavel <= 0) {
+            percentualAderencia = 0;
+            return;
+        }
+
+        percentualAderencia =
+                ((double) conformidades / totalAplicavel) * 100;
     }
 
     public boolean atingiuAderenciaMinima() {

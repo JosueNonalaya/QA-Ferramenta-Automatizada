@@ -66,13 +66,15 @@ CREATE TABLE IF NOT EXISTS resposta_checklist (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     opcao TEXT NOT NULL,
     pergunta_id INTEGER NOT NULL,
+    data_hora_resposta TEXT NOT NULL,
     FOREIGN KEY (pergunta_id) REFERENCES pergunta_checklist(id)
 );
 
 CREATE TABLE IF NOT EXISTS classificacao_nc (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    descricao TEXT
+    descricao TEXT,
+    prazo_horas INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS nao_conformidade (
@@ -81,9 +83,15 @@ CREATE TABLE IF NOT EXISTS nao_conformidade (
     status TEXT NOT NULL,
     classificacao_id INTEGER NOT NULL,
     auditoria_id INTEGER NOT NULL,
+    data_identificacao TEXT,
+    responsavel_id INTEGER,
+    data_resolucao TEXT,
+    data_escalonamento TEXT,
+    acao_corretiva TEXT,
     FOREIGN KEY (classificacao_id) REFERENCES classificacao_nc(id),
-    FOREIGN KEY (auditoria_id) REFERENCES auditoria(id)
-);
+    FOREIGN KEY (auditoria_id) REFERENCES auditoria(id),
+    FOREIGN KEY (responsavel_id) REFERENCES responsavel(id)
+    );
 
 CREATE TABLE IF NOT EXISTS notificacao (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

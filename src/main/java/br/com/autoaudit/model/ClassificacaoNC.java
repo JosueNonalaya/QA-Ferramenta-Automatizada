@@ -5,13 +5,19 @@ public class ClassificacaoNC {
     private Long id;
     private String nome;
     private String descricao;
+    private int prazoHoras;
 
     public ClassificacaoNC() {
     }
 
-    public ClassificacaoNC(String nome, String descricao) {
+    public ClassificacaoNC(
+            String nome,
+            String descricao,
+            int prazoHoras
+    ) {
         this.nome = nome;
         this.descricao = descricao;
+        this.prazoHoras = prazoHoras;
     }
 
     //GETTER's e SETTER's
@@ -37,5 +43,13 @@ public class ClassificacaoNC {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public int getPrazoHoras() {
+        return prazoHoras;
+    }
+
+    public void setPrazoHoras(int prazoHoras) {
+        this.prazoHoras = prazoHoras;
     }
 }
